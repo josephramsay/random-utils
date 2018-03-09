@@ -1,0 +1,33 @@
+#!/bin/bash
+
+slist0="lix"
+slist1="dev1 tst1 tst2 prd1 prd2 prd3"
+slist2="d1pg t1pg p1pg p2pg"
+passwd=`grep -i pa ~/<credentials_file> | cut -c10-`
+spasswd=`grep -i spa ~/<credentials_file> | cut -c11-`
+svr=$1
+prt=$2
+
+function list_include_item {
+  local list="$1"
+  local item="$2"
+  if [[ $list =~ (^|[[:space:]])"$item"($|[[:space:]]) ]] ; then
+    # yes, list includes item
+    result=0
+  else
+    result=1
+  fi
+  return $result
+}
+
+if list_include_item "$slist0" "$svr"; then
+    /home/<user>/script/svrexpect.sh $svr $spasswd
+elif list_include_item "$slist2" "$svr"; then
+    /home/<user>/script/tunexpect.sh $svr $spasswd
+elif list_include_item "$slist1" "$svr"; then
+    /home/<user>/script/svrexpect.sh $svr $spasswd $passwd
+else
+    echo "$slist0 $slist1 $slist2 != $svr"
+fi
+
+
