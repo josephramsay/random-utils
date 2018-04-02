@@ -7,9 +7,11 @@ send_user "Setting up tunnel to $svr\n"
 
 spawn ssh $svr
 
+send_user "P1 rndgw\n"
 expect "/.ssh/<ssh_key>':"
 send "$spasswd\n"
 
+send_user "P2 liexp\n"
 expect "/.ssh/<ssh_key>':"
 send "$spasswd\n"
 

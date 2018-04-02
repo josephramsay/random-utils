@@ -4,6 +4,13 @@ Hostname <li-exp-svr>
 IdentityFile /home/<user>/.ssh/<ssh_key>
 ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> <gw-user>@<gw-svr> nc %h %p
 
+# Direct
+
+Host lds0
+Hostname <p12>
+User <user>
+ProxyJump lix
+
 Host prd1
 Hostname <p01>
 User <user>
@@ -34,8 +41,7 @@ Hostname <d01>
 User <user>
 ProxyJump lix
 
-
-#PostgreSQL PortForwards
+# PostgreSQL PortForwards
 
 Host d1pg
 Hostname <d01>
@@ -45,19 +51,19 @@ ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 15432:%h:5432 lix
 Host t1pg
 Hostname <t01>
 User <user>
-ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 15432:%h:5432 lix
+ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 25432:%h:5432 lix
 
 Host p1pg
 Hostname <p01>
 User <user>
-ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 15432:%h:5432 lix
+ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 35432:%h:5432 lix
 
 Host p2pg
 Hostname <p02>
 User <user>
-ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 15432:%h:5432 lix
+ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 45432:%h:5432 lix
 
-#Test
+# Experimental
 
 Host p1x
 Hostname <p01>
@@ -65,3 +71,9 @@ User <user>
 ProxyJump lix
 IdentityFile /home/<user>/.ssh/<ssh_key>
 LocalForward 25432 %h:5432
+
+Host lxpg
+User <user>
+Hostname <lxpg>
+IdentityFile /home/<user>/.ssh/<ssh_key>
+ProxyCommand ssh -i /home/<user>/.ssh/<ssh_key> -L 55432:%h:15432 lix

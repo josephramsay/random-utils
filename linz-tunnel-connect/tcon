@@ -1,12 +1,14 @@
 #!/bin/bash
 
 slist0="lix"
-slist1="dev1 tst1 tst2 prd1 prd2 prd3"
-slist2="d1pg t1pg p1pg p2pg"
+slist1=$(awk '/# Direct/,/# PostgreSQL/' ~/.ssh/config | awk '/Host / {print $2}')
+slist2=$(awk '/# PostgreSQL/,/# Experimental/' ~/.ssh/config | awk '/Host / {print $2}')
+
 passwd=`grep -i pa ~/<credentials_file> | cut -c10-`
 spasswd=`grep -i spa ~/<credentials_file> | cut -c11-`
-svr=$1
-prt=$2
+
+svr1=$1
+svr2=$2
 
 function list_include_item {
   local list="$1"
@@ -20,14 +22,17 @@ function list_include_item {
   return $result
 }
 
-if list_include_item "$slist0" "$svr"; then
-    /home/<user>/script/svrexpect.sh $svr $spasswd
-elif list_include_item "$slist2" "$svr"; then
-    /home/<user>/script/tunexpect.sh $svr $spasswd
-elif list_include_item "$slist1" "$svr"; then
-    /home/<user>/script/svrexpect.sh $svr $spasswd $passwd
+if list_include_item "$slist0" "$svr1"; then
+    /home/<user>/script/svrexpect.sh $svr1 $spasswd
+elif list_include_item "$slist2" "$svr1"; then
+    if [ -n "$svr2" ] && list_include_item "$slist2" "$svr2"; then
+        /home/<user>/script/tunexpect.sh $svr2 $spasswd &
+    fi
+    /home/<user>/script/tunexpect.sh $svr1 $spasswd
+elif list_include_item "$slist1" "$svr1"; then
+    /home/<user>/script/svrexpect.sh $svr1 $spasswd $passwd
 else
-    echo "$slist0 $slist1 $slist2 != $svr"
+    echo "$slist0 $slist1 $slist2 != $svr1"
 fi
 
 
