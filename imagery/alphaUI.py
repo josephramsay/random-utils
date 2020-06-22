@@ -117,4 +117,4 @@ if __name__ == '__main__':
     app = QApplication([])
     pp = PathPicker()
     pp.show() 
-    sys.exit(app.exec_()) 
+    sys.exit(app.exec_())
